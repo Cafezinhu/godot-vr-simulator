@@ -3,13 +3,12 @@ extends Node
 export var enabled: bool
 export var device_x_sensitivity: float = 1
 export var device_y_sensitivity: float = 1
+export var scroll_sensitivity: float = 1
 
 const SimulatedController = preload("res://SimulatedController.gd")
 
 var origin: ARVROrigin
 var camera: ARVRCamera
-var left_controller: ARVRController
-var right_controller: ARVRController
 var simulated_left_controller: SimulatedController = SimulatedController.new()
 var simulated_right_controller: SimulatedController = SimulatedController.new()
 
@@ -62,11 +61,16 @@ func _input(event):
 	
 	if event is InputEventMouseMotion:
 		if Input.is_physical_key_pressed(KEY_Q):
-			pass
+			move_controller(event, simulated_left_controller)
 		elif Input.is_physical_key_pressed(KEY_E):
-			pass
+			move_controller(event, simulated_right_controller)
 		else:
 			rotate_device(event, camera)
+	elif event is InputEventMouseButton:
+		if Input.is_physical_key_pressed(KEY_Q):
+			attract_conntroller(event, simulated_left_controller)
+		elif Input.is_physical_key_pressed(KEY_E):
+			attract_conntroller(event, simulated_right_controller)
 
 func simulate_joysticks():
 	var vec_left = vector_key_mapping(KEY_D, KEY_A, KEY_W, KEY_S)
@@ -78,7 +82,28 @@ func simulate_joysticks():
 	
 	simulated_right_controller.x_axis = vec_right.x
 	simulated_right_controller.y_axis = vec_right.y
+
+func move_controller(event: InputEventMouseMotion, controller: SimulatedController):
+	var movement = Vector3()
+	movement += camera.transform.basis.x * event.relative.x * device_x_sensitivity/1000
+	movement += camera.transform.basis.y * event.relative.y * -device_y_sensitivity/1000
+	controller.translate(movement)
 	
+func attract_conntroller(event: InputEventMouseButton, controller: SimulatedController):
+	var direction = -1
+	
+	if event.button_index == BUTTON_WHEEL_UP:
+		direction = 1
+	elif event.button_index != BUTTON_WHEEL_DOWN:
+		return
+	
+	var forward = (controller.transform.origin - camera.transform.origin).normalized() * direction
+	if forward.length() == 0:
+		forward = camera.transform.basis.z * -direction
+	
+	controller.translate(forward * (scroll_sensitivity/10))
+	
+
 func rotate_device(event: InputEventMouseMotion, device: Spatial):
 	var motion = event.relative
 	device.rotate_y(motion.x * -device_x_sensitivity/1000)
