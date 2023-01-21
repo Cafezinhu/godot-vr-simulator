@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://VRSimulator.gd" type="Script" id=1]
 [ext_resource path="res://addons/godot-openxr/scenes/first_person_controller_vr.tscn" type="PackedScene" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://addons/godot-xr-tools/functions/movement_turn.tscn" type="PackedScene" id=6]
 [ext_resource path="res://addons/godot-xr-tools/functions/function_pickup.tscn" type="PackedScene" id=7]
 [ext_resource path="res://addons/godot-xr-tools/objects/pickable.gd" type="Script" id=8]
+[ext_resource path="res://Test.gd" type="Script" id=9]
 
 [sub_resource type="CubeMesh" id=3]
 size = Vector3( 0.1, 0.1, 0.273 )
@@ -72,6 +73,7 @@ skeleton = NodePath("../../LeftHandController")
 [node name="PlayerBody" parent="VRSimulator/FPController" instance=ExtResource( 5 )]
 
 [node name="StaticBody" type="StaticBody" parent="."]
+script = ExtResource( 9 )
 
 [node name="CollisionShape" type="CollisionShape" parent="StaticBody"]
 shape = SubResource( 1 )

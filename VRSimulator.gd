@@ -12,6 +12,23 @@ var camera: ARVRCamera
 var simulated_left_controller: SimulatedController = SimulatedController.new()
 var simulated_right_controller: SimulatedController = SimulatedController.new()
 
+var key_map = {
+	KEY_1: 1,
+	KEY_2: 2,
+	KEY_3: 3,
+	KEY_4: 4,
+	KEY_5: 5,
+	KEY_6: 6,
+	KEY_7: 7,
+	KEY_8: 8,
+	KEY_9: 9,
+	KEY_0: 10,
+	KEY_MINUS: 11,
+	KEY_EQUAL: 12,
+	KEY_BACKSPACE: 13,
+	KEY_ENTER: 14
+}
+
 func _enter_tree():
 	if not enabled:
 		return
@@ -20,9 +37,8 @@ func _enter_tree():
 	
 	origin = get_child(0)
 	simulated_left_controller = SimulatedController.new()
-	simulated_left_controller.name = "SimulatedLeftController"
 	simulated_right_controller = SimulatedController.new()
-	simulated_right_controller.name = "SimulatedRightController"
+	
 	for child in origin.get_children():
 		if child.get("controller_id"):
 			if child.controller_id == 1:
@@ -37,18 +53,19 @@ func _ready():
 func bind_simulated_controller(controller: ARVRController, simulated_controller: SimulatedController):
 	origin.add_child(simulated_controller)
 	
+	var new_name = controller.name
+	print(new_name)
+	
 	for controller_child in controller.get_children():
 		controller.remove_child(controller_child)
 		simulated_controller.add_child(controller_child)
 		
 	simulated_controller.controller_id = controller.controller_id
 	simulated_controller.transform = controller.transform
+	controller.get_parent().remove_child(controller)
 	controller.queue_free()
+	simulated_controller.name = new_name
 
-func _process(_delta):
-	simulate_joysticks()
-	simulate_buttons()
-	
 func _input(event):
 	if Input.is_key_pressed(KEY_ESCAPE):
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -57,6 +74,8 @@ func _input(event):
 	
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
+	
+	simulate_joysticks()
 	
 	if event is InputEventMouseMotion:
 		if Input.is_physical_key_pressed(KEY_Q):
@@ -74,8 +93,17 @@ func _input(event):
 	elif event is InputEventMouseButton:
 		if Input.is_physical_key_pressed(KEY_Q):
 			attract_controller(event, simulated_left_controller)
+			simulate_trigger(event, simulated_left_controller)
+			simulate_grip(event, simulated_left_controller)
 		elif Input.is_physical_key_pressed(KEY_E):
 			attract_controller(event, simulated_right_controller)
+			simulate_trigger(event, simulated_right_controller)
+			simulate_grip(event, simulated_right_controller)
+	elif event is InputEventKey:
+		if Input.is_physical_key_pressed(KEY_Q):
+			simulate_buttons(event, simulated_left_controller)
+		elif Input.is_physical_key_pressed(KEY_E):
+			simulate_buttons(event, simulated_right_controller)
 
 func simulate_joysticks():
 	var vec_left = vector_key_mapping(KEY_D, KEY_A, KEY_W, KEY_S)
@@ -88,22 +116,28 @@ func simulate_joysticks():
 	simulated_right_controller.x_axis = vec_right.x
 	simulated_right_controller.y_axis = vec_right.y
 
-func simulate_buttons():
-	if Input.is_physical_key_pressed(KEY_Q):
-		press_buttons(simulated_left_controller)
-	elif Input.is_physical_key_pressed(KEY_E):
-		press_buttons(simulated_right_controller)
+func simulate_trigger(event: InputEventMouseButton, controller: SimulatedController):
+	if event.button_index == BUTTON_LEFT:
+		if event.pressed:
+			controller.press_button(15)
+		else:
+			controller.release_button(15)
 
-func press_buttons(controller: SimulatedController):
-	if Input.is_mouse_button_pressed(BUTTON_RIGHT):
-		controller.grip_axis = 1
-	else:
-		controller.grip_axis = 0
-	
-	if Input.is_mouse_button_pressed(BUTTON_LEFT):
-		controller.is_trigger_pressed = true
-	else:
-		controller.is_trigger_pressed = false
+func simulate_grip(event: InputEventMouseButton, controller: SimulatedController):
+	if event.button_index == BUTTON_RIGHT:
+		controller.grip_axis = int(event.pressed)
+		if event.pressed:
+			controller.press_button(2)
+		else:
+			controller.release_button(2)
+
+func simulate_buttons(event: InputEventKey, controller: SimulatedController):
+	if key_map.has(event.scancode):
+		var button = key_map[event.scancode]
+		if event.pressed:
+			controller.press_button(button)
+		else:
+			controller.release_button(button)
 
 func move_controller(event: InputEventMouseMotion, controller: SimulatedController):
 	var movement = Vector3()
@@ -111,8 +145,6 @@ func move_controller(event: InputEventMouseMotion, controller: SimulatedControll
 	movement += camera.transform.basis.y * event.relative.y * -device_y_sensitivity/1000
 	controller.translate(movement)
 	
-
-
 func attract_controller(event: InputEventMouseButton, controller: SimulatedController):
 	var direction = -1
 	
