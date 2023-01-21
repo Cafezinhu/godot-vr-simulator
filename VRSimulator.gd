@@ -12,7 +12,6 @@ var camera: ARVRCamera
 var simulated_left_controller: SimulatedController = SimulatedController.new()
 var simulated_right_controller: SimulatedController = SimulatedController.new()
 
-# Called when the node enters the scene tree for the first time.
 func _enter_tree():
 	if not enabled:
 		return
@@ -46,9 +45,9 @@ func bind_simulated_controller(controller: ARVRController, simulated_controller:
 	simulated_controller.transform = controller.transform
 	controller.queue_free()
 
-
 func _process(_delta):
 	simulate_joysticks()
+	simulate_buttons()
 	
 func _input(event):
 	if Input.is_key_pressed(KEY_ESCAPE):
@@ -74,9 +73,9 @@ func _input(event):
 			rotate_device(event, camera)
 	elif event is InputEventMouseButton:
 		if Input.is_physical_key_pressed(KEY_Q):
-			attract_conntroller(event, simulated_left_controller)
+			attract_controller(event, simulated_left_controller)
 		elif Input.is_physical_key_pressed(KEY_E):
-			attract_conntroller(event, simulated_right_controller)
+			attract_controller(event, simulated_right_controller)
 
 func simulate_joysticks():
 	var vec_left = vector_key_mapping(KEY_D, KEY_A, KEY_W, KEY_S)
@@ -89,13 +88,32 @@ func simulate_joysticks():
 	simulated_right_controller.x_axis = vec_right.x
 	simulated_right_controller.y_axis = vec_right.y
 
+func simulate_buttons():
+	if Input.is_physical_key_pressed(KEY_Q):
+		press_buttons(simulated_left_controller)
+	elif Input.is_physical_key_pressed(KEY_E):
+		press_buttons(simulated_right_controller)
+
+func press_buttons(controller: SimulatedController):
+	if Input.is_mouse_button_pressed(BUTTON_RIGHT):
+		controller.grip_axis = 1
+	else:
+		controller.grip_axis = 0
+	
+	if Input.is_mouse_button_pressed(BUTTON_LEFT):
+		controller.is_trigger_pressed = true
+	else:
+		controller.is_trigger_pressed = false
+
 func move_controller(event: InputEventMouseMotion, controller: SimulatedController):
 	var movement = Vector3()
 	movement += camera.transform.basis.x * event.relative.x * device_x_sensitivity/1000
 	movement += camera.transform.basis.y * event.relative.y * -device_y_sensitivity/1000
 	controller.translate(movement)
 	
-func attract_conntroller(event: InputEventMouseButton, controller: SimulatedController):
+
+
+func attract_controller(event: InputEventMouseButton, controller: SimulatedController):
 	var direction = -1
 	
 	if event.button_index == BUTTON_WHEEL_UP:
