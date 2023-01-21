@@ -61,9 +61,15 @@ func _input(event):
 	
 	if event is InputEventMouseMotion:
 		if Input.is_physical_key_pressed(KEY_Q):
-			move_controller(event, simulated_left_controller)
+			if Input.is_key_pressed(KEY_SHIFT):
+				rotate_device(event, simulated_left_controller)
+			else:
+				move_controller(event, simulated_left_controller)
 		elif Input.is_physical_key_pressed(KEY_E):
-			move_controller(event, simulated_right_controller)
+			if Input.is_key_pressed(KEY_SHIFT):
+				rotate_device(event, simulated_right_controller)
+			else:
+				move_controller(event, simulated_right_controller)
 		else:
 			rotate_device(event, camera)
 	elif event is InputEventMouseButton:
@@ -102,7 +108,6 @@ func attract_conntroller(event: InputEventMouseButton, controller: SimulatedCont
 		forward = camera.transform.basis.z * -direction
 	
 	controller.translate(forward * (scroll_sensitivity/10))
-	
 
 func rotate_device(event: InputEventMouseMotion, device: Spatial):
 	var motion = event.relative
