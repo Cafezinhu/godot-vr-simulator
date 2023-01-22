@@ -1,6 +1,6 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=17 format=2]
 
-[ext_resource path="res://VRSimulator.gd" type="Script" id=1]
+[ext_resource path="res://addons/vr-simulator/VRSimulator.tscn" type="PackedScene" id=1]
 [ext_resource path="res://addons/godot-openxr/scenes/first_person_controller_vr.tscn" type="PackedScene" id=2]
 [ext_resource path="res://addons/godot-xr-tools/functions/movement_direct.tscn" type="PackedScene" id=3]
 [ext_resource path="res://addons/godot-xr-tools/misc/vr_common_shader_cache.tscn" type="PackedScene" id=4]
@@ -8,10 +8,6 @@
 [ext_resource path="res://addons/godot-xr-tools/functions/movement_turn.tscn" type="PackedScene" id=6]
 [ext_resource path="res://addons/godot-xr-tools/functions/function_pickup.tscn" type="PackedScene" id=7]
 [ext_resource path="res://addons/godot-xr-tools/objects/pickable.gd" type="Script" id=8]
-[ext_resource path="res://Test.gd" type="Script" id=9]
-
-[sub_resource type="CubeMesh" id=3]
-size = Vector3( 0.1, 0.1, 0.273 )
 
 [sub_resource type="BoxShape" id=1]
 extents = Vector3( 25.4561, 0.0238628, 50.2799 )
@@ -32,48 +28,12 @@ extents = Vector3( 0.25, 0.25, 0.25 )
 [sub_resource type="CubeMesh" id=5]
 size = Vector3( 0.5, 0.5, 0.5 )
 
+[sub_resource type="CubeMesh" id=3]
+size = Vector3( 0.1, 0.1, 0.273 )
+
 [node name="Spatial" type="Spatial"]
 
-[node name="VRSimulator" type="Node" parent="."]
-script = ExtResource( 1 )
-enabled = true
-
-[node name="FPController" parent="VRSimulator" instance=ExtResource( 2 )]
-
-[node name="ARVRCamera" parent="VRSimulator/FPController" index="1"]
-far = 1000.0
-
-[node name="VRCommonShaderCache" parent="VRSimulator/FPController/ARVRCamera" index="0" instance=ExtResource( 4 )]
-
-[node name="LeftHandController" parent="VRSimulator/FPController" index="2"]
-visible = true
-
-[node name="MovementDirect" parent="VRSimulator/FPController/LeftHandController" index="0" instance=ExtResource( 3 )]
-enabled = true
-order = 10
-max_speed = 10.0
-strafe = true
-
-[node name="MeshInstance" type="MeshInstance" parent="VRSimulator/FPController/LeftHandController" index="1"]
-mesh = SubResource( 3 )
-
-[node name="FunctionPickup" parent="VRSimulator/FPController/LeftHandController" index="2" instance=ExtResource( 7 )]
-
-[node name="RightHandController" parent="VRSimulator/FPController" index="3"]
-visible = true
-
-[node name="MovementTurn" parent="VRSimulator/FPController/RightHandController" index="0" instance=ExtResource( 6 )]
-
-[node name="MeshInstance2" type="MeshInstance" parent="VRSimulator/FPController/RightHandController" index="1"]
-mesh = SubResource( 3 )
-skeleton = NodePath("../../LeftHandController")
-
-[node name="FunctionPickup" parent="VRSimulator/FPController/RightHandController" index="2" instance=ExtResource( 7 )]
-
-[node name="PlayerBody" parent="VRSimulator/FPController" instance=ExtResource( 5 )]
-
 [node name="StaticBody" type="StaticBody" parent="."]
-script = ExtResource( 9 )
 
 [node name="CollisionShape" type="CollisionShape" parent="StaticBody"]
 shape = SubResource( 1 )
@@ -101,4 +61,41 @@ shape = SubResource( 4 )
 [node name="MeshInstance" type="MeshInstance" parent="XRToolsPickable"]
 mesh = SubResource( 5 )
 
-[editable path="VRSimulator/FPController"]
+[node name="FPController" parent="." instance=ExtResource( 2 )]
+
+[node name="ARVRCamera" parent="FPController" index="1"]
+far = 1000.0
+
+[node name="VRCommonShaderCache" parent="FPController/ARVRCamera" index="0" instance=ExtResource( 4 )]
+
+[node name="LeftHandController" parent="FPController" index="2"]
+visible = true
+
+[node name="MovementDirect" parent="FPController/LeftHandController" index="0" instance=ExtResource( 3 )]
+enabled = true
+order = 10
+max_speed = 10.0
+strafe = true
+
+[node name="MeshInstance" type="MeshInstance" parent="FPController/LeftHandController" index="1"]
+mesh = SubResource( 3 )
+
+[node name="FunctionPickup" parent="FPController/LeftHandController" index="2" instance=ExtResource( 7 )]
+
+[node name="RightHandController" parent="FPController" index="3"]
+visible = true
+
+[node name="MovementTurn" parent="FPController/RightHandController" index="0" instance=ExtResource( 6 )]
+
+[node name="MeshInstance2" type="MeshInstance" parent="FPController/RightHandController" index="1"]
+mesh = SubResource( 3 )
+skeleton = NodePath("../../LeftHandController")
+
+[node name="FunctionPickup" parent="FPController/RightHandController" index="2" instance=ExtResource( 7 )]
+
+[node name="PlayerBody" parent="FPController" instance=ExtResource( 5 )]
+
+[node name="VRSimulator" parent="." instance=ExtResource( 1 )]
+xr_origin = NodePath("../FPController")
+
+[editable path="FPController"]

@@ -4,8 +4,9 @@ export var enabled: bool
 export var device_x_sensitivity: float = 1
 export var device_y_sensitivity: float = 1
 export var scroll_sensitivity: float = 1
+export var xr_origin: NodePath
 
-const SimulatedController = preload("res://SimulatedController.gd")
+const SimulatedController = preload("res://addons/vr-simulator/SimulatedController.gd")
 
 var origin: ARVROrigin
 var camera: ARVRCamera
@@ -35,7 +36,7 @@ func _enter_tree():
 		
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
-	origin = get_child(0)
+	origin = get_node(xr_origin)
 	simulated_left_controller = SimulatedController.new()
 	simulated_right_controller = SimulatedController.new()
 	
@@ -48,7 +49,8 @@ func _enter_tree():
 	
 	
 func _ready():
-	camera = origin.get_node("ARVRCamera")
+	if enabled:
+		camera = origin.get_node("ARVRCamera")
 	
 func bind_simulated_controller(controller: ARVRController, simulated_controller: SimulatedController):
 	origin.add_child(simulated_controller)
@@ -67,6 +69,8 @@ func bind_simulated_controller(controller: ARVRController, simulated_controller:
 	simulated_controller.name = new_name
 
 func _input(event):
+	if not enabled:
+		return
 	if Input.is_key_pressed(KEY_ESCAPE):
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	elif Input.mouse_mode != Input.MOUSE_MODE_CAPTURED and event is InputEventMouseButton:
@@ -141,23 +145,26 @@ func simulate_buttons(event: InputEventKey, controller: SimulatedController):
 
 func move_controller(event: InputEventMouseMotion, controller: SimulatedController):
 	var movement = Vector3()
-	movement += camera.transform.basis.x * event.relative.x * device_x_sensitivity/1000
-	movement += camera.transform.basis.y * event.relative.y * -device_y_sensitivity/1000
-	controller.translate(movement)
+	movement += camera.global_transform.basis.x * event.relative.x * device_x_sensitivity/1000
+	movement += camera.global_transform.basis.y * event.relative.y * -device_y_sensitivity/1000
+	controller.global_translate(movement)
 	
 func attract_controller(event: InputEventMouseButton, controller: SimulatedController):
 	var direction = -1
+	
+	if not event.pressed:
+		return
 	
 	if event.button_index == BUTTON_WHEEL_UP:
 		direction = 1
 	elif event.button_index != BUTTON_WHEEL_DOWN:
 		return
 	
-	var forward = (controller.transform.origin - camera.transform.origin).normalized() * direction
-	if forward.length() == 0:
-		forward = camera.transform.basis.z * -direction
-	
-	controller.translate(forward * (scroll_sensitivity/10))
+	var distance_vector = controller.global_transform.origin - camera.global_transform.origin
+	var forward = distance_vector.normalized() * direction
+	var movement = distance_vector + forward * (scroll_sensitivity/20)
+	if distance_vector.length() > 0.1 and movement.length() > 0.1:
+		controller.global_translate(forward * (scroll_sensitivity/20))
 
 func rotate_device(event: InputEventMouseMotion, device: Spatial):
 	var motion = event.relative
