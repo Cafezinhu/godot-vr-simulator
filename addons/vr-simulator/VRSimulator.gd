@@ -103,11 +103,27 @@ func _input(event):
 			attract_controller(event, simulated_right_controller)
 			simulate_trigger(event, simulated_right_controller)
 			simulate_grip(event, simulated_right_controller)
+		else:
+			camera_height(event)
 	elif event is InputEventKey:
 		if Input.is_physical_key_pressed(KEY_Q):
 			simulate_buttons(event, simulated_left_controller)
 		elif Input.is_physical_key_pressed(KEY_E):
 			simulate_buttons(event, simulated_right_controller)
+
+func camera_height(event: InputEventMouseButton):
+	var direction = -1
+	
+	if not event.pressed:
+		return
+	
+	if event.button_index == BUTTON_WHEEL_UP:
+		direction = 1
+	elif event.button_index != BUTTON_WHEEL_DOWN:
+		return
+	
+	var pos = camera.transform.origin
+	camera.transform.origin = Vector3(pos.x, pos.y + (scroll_sensitivity * direction)/20 , pos.z)
 
 func simulate_joysticks():
 	var vec_left = vector_key_mapping(KEY_D, KEY_A, KEY_W, KEY_S)
