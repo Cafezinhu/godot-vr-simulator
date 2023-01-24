@@ -10,8 +10,8 @@ const SimulatedController = preload("res://addons/vr-simulator/SimulatedControll
 
 var origin: ARVROrigin
 var camera: ARVRCamera
-var simulated_left_controller: SimulatedController = SimulatedController.new()
-var simulated_right_controller: SimulatedController = SimulatedController.new()
+var simulated_left_controller: SimulatedController
+var simulated_right_controller: SimulatedController
 
 var key_map = {
 	KEY_1: 1,
