@@ -1,6 +1,7 @@
 extends Node
 
 export var enabled: bool
+export var xr_interface = "OpenXR"
 export var device_x_sensitivity: float = 1
 export var device_y_sensitivity: float = 1
 export var scroll_sensitivity: float = 1
@@ -31,7 +32,9 @@ var key_map = {
 }
 
 func _enter_tree():
-	if not enabled:
+	var interface = ARVRServer.find_interface(xr_interface)
+	if not enabled or (interface and interface.initialize()):
+		enabled = false
 		return
 		
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -56,7 +59,6 @@ func bind_simulated_controller(controller: ARVRController, simulated_controller:
 	origin.add_child(simulated_controller)
 	
 	var new_name = controller.name
-	print(new_name)
 	
 	for controller_child in controller.get_children():
 		controller.remove_child(controller_child)
