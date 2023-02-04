@@ -10,13 +10,14 @@ func _ready():
 	for _i in range(16):
 		buttons.append(false)
 
-func get_controller_name():
-	return "Simulated controller"
-	
 func get_is_active():
 	return true
 
 func get_joystick_axis(axis):
+	var base_axis = .get_joystick_axis(axis)
+	if base_axis != 0:
+		return base_axis
+	
 	if axis == 0:
 		return x_axis
 	elif axis == 1:
@@ -28,11 +29,11 @@ func get_joystick_axis(axis):
 	else:
 		return 0
 
-func get_joystick_id():
-	return 0
-
 func is_button_pressed(button: int):
-	return buttons[button]
+	var is_base_pressed = .is_button_pressed(button)
+	if not is_base_pressed:
+		return buttons[button]
+	return is_base_pressed
 
 func press_button(button: int):
 	buttons[button] = true

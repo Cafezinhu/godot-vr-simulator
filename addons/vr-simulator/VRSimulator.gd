@@ -1,7 +1,6 @@
 extends Node
 
 export var enabled: bool
-export var xr_interface = "OpenXR"
 export var device_x_sensitivity: float = 1
 export var device_y_sensitivity: float = 1
 export var scroll_sensitivity: float = 1
@@ -32,9 +31,7 @@ var key_map = {
 }
 
 func _enter_tree():
-	var interface = ARVRServer.find_interface(xr_interface)
-	if not enabled or (interface and interface.initialize()):
-		enabled = false
+	if not enabled:
 		return
 		
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
