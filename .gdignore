@@ -1,5 +1,6 @@
 github-assets
 .gitignore
+.gitattributes
 default_env.tres
 icon.png
 icon.png.import
