@@ -37,35 +37,19 @@ func _enter_tree():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
 	origin = get_node(xr_origin)
-	simulated_left_controller = SimulatedController.new()
-	simulated_right_controller = SimulatedController.new()
 	
 	for child in origin.get_children():
 		if child.get("controller_id"):
 			if child.controller_id == 1:
-				bind_simulated_controller(child, simulated_left_controller)
+				child.set_script(SimulatedController)
+				simulated_left_controller = child
 			elif child.controller_id == 2:
-				bind_simulated_controller(child, simulated_right_controller)
-	
+				child.set_script(SimulatedController)
+				simulated_right_controller = child
 	
 func _ready():
 	if enabled:
 		camera = origin.get_node("ARVRCamera")
-	
-func bind_simulated_controller(controller: ARVRController, simulated_controller: SimulatedController):
-	origin.add_child(simulated_controller)
-	
-	var new_name = controller.name
-	
-	for controller_child in controller.get_children():
-		controller.remove_child(controller_child)
-		simulated_controller.add_child(controller_child)
-		
-	simulated_controller.controller_id = controller.controller_id
-	simulated_controller.transform = controller.transform
-	controller.get_parent().remove_child(controller)
-	controller.queue_free()
-	simulated_controller.name = new_name
 
 func _input(event):
 	if not enabled:
