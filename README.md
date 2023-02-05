@@ -26,6 +26,7 @@ Selecting a controller allow you to move, rotate, and press a button of the sele
 
 ## Moving and rotating the controllers
 - Move your mouse to move the controller
+- Scroll to move the controller closer or further away from the camera
 - Move your mouse while holding ``Shift`` to rotate the controller
 
 ## Trigger and Grip
