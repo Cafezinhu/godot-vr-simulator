@@ -31,7 +31,9 @@ var key_map = {
 }
 
 func _ready():
-	if not enabled:
+	if not enabled or \
+	XRServer.get_tracker("left_hand") or \
+	XRServer.get_tracker("right_hand"):
 		return
 		
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
