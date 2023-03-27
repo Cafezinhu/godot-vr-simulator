@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://o224y2d50yl1"]
+[gd_scene load_steps=18 format=3 uid="uid://o224y2d50yl1"]
 
 [ext_resource type="PackedScene" uid="uid://bl2nuu3qhlb5k" path="res://addons/godot-xr-tools/functions/movement_direct.tscn" id="1_ywmh7"]
 [ext_resource type="PackedScene" uid="uid://b4ysuy43poobf" path="res://addons/godot-xr-tools/functions/function_pickup.tscn" id="2_nloek"]
@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://fiul51tsyoop" path="res://addons/godot-xr-tools/functions/function_teleport.tscn" id="3_isyx6"]
 [ext_resource type="PackedScene" uid="uid://diyu06cw06syv" path="res://addons/godot-xr-tools/player/player_body.tscn" id="3_m4pts"]
 [ext_resource type="PackedScene" uid="uid://c8l60rnugru40" path="res://addons/godot-xr-tools/objects/pickable.tscn" id="5_r3xxt"]
-[ext_resource type="PackedScene" uid="uid://bt5adj8pxx2pp" path="res://addons/vr-simulator/XRSimulator.tscn" id="7_74t6q"]
 
 [sub_resource type="BoxShape3D" id="1"]
 size = Vector3(25.456, 1, 50.28)
@@ -114,8 +113,5 @@ environment = SubResource("Environment_71xw7")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.402254, -0.874811, 0.269994, -0.530985, 0.0173175, 0.847205, -0.74582, -0.484154, -0.457545, 0, -0.516751, 0.31203)
 shadow_enabled = true
-
-[node name="XRSimulator" parent="." instance=ExtResource("7_74t6q")]
-xr_origin = NodePath("../XROrigin3D")
 
 [editable path="PickableObject"]
