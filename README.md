@@ -1,11 +1,11 @@
-# Godot VR Simulator
-Simulate ARVRController and ARVRCamera Input
+# Godot XR Simulator
+Simulate XRController3D and XRCamera Input
 
 ## First Steps
 - Setup your scene for VR. You can start by following Bastiaan Olij's tutorials
-https://www.youtube.com/watch?v=LZ9UKR48b0Y
+https://www.youtube.com/watch?v=wDXnsy2IH1A
 
-- Insert ``VRSimulator.tscn`` into your scene, and then assign your ``ARVROrigin`` into the ``XR Origin`` parameter.
+- Insert ``XRSimulator.tscn`` into your scene, and then assign your ``XROrigin`` into the ``XR Origin`` parameter.
 
 ![How to setup a VR Simulator](https://github.com/Cafezinhu/godot-vr-simulator/blob/main/github-assets/assigngif.gif?raw=true)
 
@@ -30,27 +30,24 @@ Selecting a controller allow you to move, rotate, and press a button of the sele
 - Move your mouse while holding ``Shift`` to rotate the controller
 
 ## Trigger and Grip
-- Hold ``Left Click`` to press Trigger (``Button 15`` will be pressed and ``Axis 2`` will be set to 1)
-- Hold ``Right Click`` to press Grip (``Button 2`` will be pressed and ``Axis 4`` will be set to 1)
+- Hold ``Left Click`` to press Trigger (``trigger_click`` will be pressed and ``trigger`` will be set to 1)
+- Hold ``Right Click`` to press Grip (``grip_click`` will be pressed and ``grip`` will be set to 1)
 
 ## Other buttons
-Pressing 1 to 0 (on the alphanumeric keyboard), ``-``, ``=``, ``Backspace`` and ``Enter`` will press buttons numbered from 1 to 14. On an Oculus Touch controller, pressing 1 presses ``Y`` and ``B``, 7 presses ``X`` and ``A``, 3 presses the menu button.
+Pressing 1 to 8 (on the alphanumeric keyboard), ``-``, ``=`` and ``Enter`` will press or touch buttons on the OpenXR Action Map. On an Oculus Touch controller, pressing 1 presses ``Y`` and ``B``, 2 presses ``X`` and ``A``, ``-`` presses the primary joystick, and Enter presses the menu button.
 ![Keyboard](https://github.com/Cafezinhu/godot-vr-simulator/blob/main/github-assets/keyboard.png?raw=true)
 
-### Button mapping
-- 1 presses Button 1
-- 2 presses Button 2
-- 3 presses Button 3
-- 4 presses Button 4
-- 5 presses Button 5
-- 6 presses Button 6
-- 7 presses Button 7
-- 8 presses Button 8
-- 9 presses Button 9
-- 0 presses Button 10
-- ``-`` presses Button 11
-- ``=`` presses Button 12
-- ``Backspace`` presses Button 13
-- ``Enter`` presses Button 14
+### Action mapping
+- 1 presses by_button
+- 2 presses ax_button
+- 3 presses by_touch
+- 4 presses ax_touch
+- 5 presses trigger_touch
+- 6 presses grip_touch
+- 7 presses secondary_click
+- 8 presses secondary_touch
+- ``-`` presses primary_click
+- ``=`` presses primary_touch
+- ``Enter`` presses menu_button
 
-As stated before, pressing ``Left Click`` presses Button 15, and ``Right Click`` presses Button 2
+As stated before, pressing ``Left Click`` presses trigger_click, and ``Right Click`` presses grip_click.
