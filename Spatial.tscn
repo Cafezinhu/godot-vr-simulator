@@ -1,101 +1,121 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=19 format=3 uid="uid://bm7rwsn0fg4gl"]
 
-[ext_resource path="res://addons/vr-simulator/VRSimulator.tscn" type="PackedScene" id=1]
-[ext_resource path="res://addons/godot-openxr/scenes/first_person_controller_vr.tscn" type="PackedScene" id=2]
-[ext_resource path="res://addons/godot-xr-tools/functions/movement_direct.tscn" type="PackedScene" id=3]
-[ext_resource path="res://addons/godot-xr-tools/misc/vr_common_shader_cache.tscn" type="PackedScene" id=4]
-[ext_resource path="res://addons/godot-xr-tools/player/player_body.tscn" type="PackedScene" id=5]
-[ext_resource path="res://addons/godot-xr-tools/functions/movement_turn.tscn" type="PackedScene" id=6]
-[ext_resource path="res://addons/godot-xr-tools/functions/function_pickup.tscn" type="PackedScene" id=7]
-[ext_resource path="res://addons/godot-xr-tools/objects/pickable.gd" type="Script" id=8]
+[ext_resource type="PackedScene" uid="uid://bl2nuu3qhlb5k" path="res://addons/godot-xr-tools/functions/movement_direct.tscn" id="1_ywmh7"]
+[ext_resource type="PackedScene" uid="uid://b4ysuy43poobf" path="res://addons/godot-xr-tools/functions/function_pickup.tscn" id="2_nloek"]
+[ext_resource type="PackedScene" uid="uid://b6bk2pj8vbj28" path="res://addons/godot-xr-tools/functions/movement_turn.tscn" id="3_7xdfk"]
+[ext_resource type="PackedScene" uid="uid://fiul51tsyoop" path="res://addons/godot-xr-tools/functions/function_teleport.tscn" id="3_isyx6"]
+[ext_resource type="PackedScene" uid="uid://diyu06cw06syv" path="res://addons/godot-xr-tools/player/player_body.tscn" id="3_m4pts"]
+[ext_resource type="PackedScene" uid="uid://c8l60rnugru40" path="res://addons/godot-xr-tools/objects/pickable.tscn" id="5_r3xxt"]
+[ext_resource type="PackedScene" path="res://addons/vr-simulator/VRSimulator.tscn" id="6_rn66o"]
 
-[sub_resource type="BoxShape" id=1]
-extents = Vector3( 25.4561, 0.0238628, 50.2799 )
+[sub_resource type="BoxShape3D" id="1"]
+size = Vector3(25.456, 1, 50.28)
 
-[sub_resource type="PlaneMesh" id=7]
-size = Vector2( 50, 50 )
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3h6qu"]
+albedo_color = Color(0.0666667, 0.341176, 0.196078, 1)
 
-[sub_resource type="SpatialMaterial" id=8]
-albedo_color = Color( 0.733333, 0.968627, 0.760784, 1 )
+[sub_resource type="PlaneMesh" id="7"]
+material = SubResource("StandardMaterial3D_3h6qu")
+size = Vector2(50, 50)
 
-[sub_resource type="CubeMesh" id=2]
+[sub_resource type="BoxMesh" id="2"]
 
-[sub_resource type="BoxShape" id=6]
+[sub_resource type="BoxShape3D" id="6"]
 
-[sub_resource type="BoxShape" id=4]
-extents = Vector3( 0.25, 0.25, 0.25 )
+[sub_resource type="SphereMesh" id="SphereMesh_ms63b"]
+radius = 0.05
+height = 0.1
 
-[sub_resource type="CubeMesh" id=5]
-size = Vector3( 0.5, 0.5, 0.5 )
+[sub_resource type="BoxShape3D" id="BoxShape3D_qgrop"]
+size = Vector3(0.1, 0.1, 0.1)
 
-[sub_resource type="CubeMesh" id=3]
-size = Vector3( 0.1, 0.1, 0.273 )
+[sub_resource type="BoxMesh" id="BoxMesh_yre25"]
+size = Vector3(0.1, 0.1, 0.1)
 
-[node name="Spatial" type="Spatial"]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_embuf"]
 
-[node name="StaticBody" type="StaticBody" parent="."]
+[sub_resource type="Sky" id="Sky_0ymo5"]
+sky_material = SubResource("ProceduralSkyMaterial_embuf")
 
-[node name="CollisionShape" type="CollisionShape" parent="StaticBody"]
-shape = SubResource( 1 )
+[sub_resource type="Environment" id="Environment_71xw7"]
+background_mode = 2
+sky = SubResource("Sky_0ymo5")
 
-[node name="MeshInstance" type="MeshInstance" parent="StaticBody"]
-mesh = SubResource( 7 )
-material/0 = SubResource( 8 )
+[node name="Node3D" type="Node3D"]
 
-[node name="MeshInstance" type="MeshInstance" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.822464, -7.11768 )
-mesh = SubResource( 2 )
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
 
-[node name="StaticBody" type="StaticBody" parent="MeshInstance"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.512108, 0)
+shape = SubResource("1")
 
-[node name="CollisionShape" type="CollisionShape" parent="MeshInstance/StaticBody"]
-shape = SubResource( 6 )
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("7")
 
-[node name="XRToolsPickable" type="RigidBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.509245, 0, -2.34128 )
-script = ExtResource( 8 )
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.822464, -3.48972)
+mesh = SubResource("2")
 
-[node name="CollisionShape" type="CollisionShape" parent="XRToolsPickable"]
-shape = SubResource( 4 )
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
 
-[node name="MeshInstance" type="MeshInstance" parent="XRToolsPickable"]
-mesh = SubResource( 5 )
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+shape = SubResource("6")
 
-[node name="FPController" parent="." instance=ExtResource( 2 )]
+[node name="XROrigin3D" type="XROrigin3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.302863, 0)
+current = true
 
-[node name="ARVRCamera" parent="FPController" index="1"]
-far = 1000.0
+[node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+current = true
 
-[node name="VRCommonShaderCache" parent="FPController/ARVRCamera" index="0" instance=ExtResource( 4 )]
+[node name="LeftController" type="XRController3D" parent="XROrigin3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.314119, 1.22166, -0.643265)
+tracker = &"left_hand"
 
-[node name="LeftHandController" parent="FPController" index="2"]
-visible = true
+[node name="FunctionPickup" parent="XROrigin3D/LeftController" instance=ExtResource("2_nloek")]
 
-[node name="MovementDirect" parent="FPController/LeftHandController" index="0" instance=ExtResource( 3 )]
-enabled = true
-order = 10
-max_speed = 10.0
+[node name="MeshInstance3D" type="MeshInstance3D" parent="XROrigin3D/LeftController"]
+mesh = SubResource("SphereMesh_ms63b")
+
+[node name="MovementDirect" parent="XROrigin3D/LeftController" instance=ExtResource("1_ywmh7")]
 strafe = true
 
-[node name="MeshInstance" type="MeshInstance" parent="FPController/LeftHandController" index="1"]
-mesh = SubResource( 3 )
+[node name="FunctionTeleport" parent="XROrigin3D/LeftController" instance=ExtResource("3_isyx6")]
+teleport_button_action = "by_button"
 
-[node name="FunctionPickup" parent="FPController/LeftHandController" index="2" instance=ExtResource( 7 )]
+[node name="RightController" type="XRController3D" parent="XROrigin3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.277756, 1.19933, -0.668573)
+tracker = &"right_hand"
 
-[node name="RightHandController" parent="FPController" index="3"]
-visible = true
+[node name="FunctionPickup" parent="XROrigin3D/RightController" instance=ExtResource("2_nloek")]
 
-[node name="MovementTurn" parent="FPController/RightHandController" index="0" instance=ExtResource( 6 )]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="XROrigin3D/RightController"]
+mesh = SubResource("SphereMesh_ms63b")
 
-[node name="MeshInstance2" type="MeshInstance" parent="FPController/RightHandController" index="1"]
-mesh = SubResource( 3 )
-skeleton = NodePath("../../LeftHandController")
+[node name="MovementTurn" parent="XROrigin3D/RightController" instance=ExtResource("3_7xdfk")]
 
-[node name="FunctionPickup" parent="FPController/RightHandController" index="2" instance=ExtResource( 7 )]
+[node name="PlayerBody" parent="XROrigin3D" instance=ExtResource("3_m4pts")]
+ground_control = 2
 
-[node name="PlayerBody" parent="FPController" instance=ExtResource( 5 )]
+[node name="PickableObject" parent="." instance=ExtResource("5_r3xxt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5715, -3.43041)
+metadata/_edit_group_ = true
 
-[node name="VRSimulator" parent="." instance=ExtResource( 1 )]
-xr_origin = NodePath("../FPController")
+[node name="CollisionShape3D" parent="PickableObject" index="0"]
+shape = SubResource("BoxShape3D_qgrop")
 
-[editable path="FPController"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PickableObject"]
+mesh = SubResource("BoxMesh_yre25")
+
+[node name="VRSimulator" parent="." instance=ExtResource("6_rn66o")]
+xr_origin = NodePath("../XROrigin3D")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_71xw7")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.402254, -0.874811, 0.269994, -0.530985, 0.0173175, 0.847205, -0.74582, -0.484154, -0.457545, 0, -0.516751, 0.31203)
+shadow_enabled = true
+
+[editable path="PickableObject"]
