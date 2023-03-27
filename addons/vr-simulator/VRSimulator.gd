@@ -132,8 +132,10 @@ func simulate_trigger(event: InputEventMouseButton, controller: XRController3D):
 	if event.button_index == MOUSE_BUTTON_LEFT:
 		if controller.tracker == "left_hand":
 			left_tracker.set_input("trigger", float(event.pressed))
+			left_tracker.set_input("trigger_click", event.pressed)
 		else:
 			right_tracker.set_input("trigger", float(event.pressed))
+			right_tracker.set_input("trigger_click", event.pressed)
 
 func simulate_grip(event: InputEventMouseButton, controller: XRController3D):
 	if event.button_index == MOUSE_BUTTON_RIGHT:
