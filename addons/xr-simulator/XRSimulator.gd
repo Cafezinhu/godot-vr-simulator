@@ -54,13 +54,14 @@ func _ready():
 	
 	for child in origin.get_children():
 		if child.get("tracker"):
+			var pose = child.pose
 			if child.tracker == "left_hand" and not child.get_is_active():
 				left_controller = child
-				left_tracker.set_pose("default", child.transform, Vector3.ZERO, Vector3.ZERO, XRPose.XR_TRACKING_CONFIDENCE_HIGH)
+				left_tracker.set_pose(pose, child.transform, Vector3.ZERO, Vector3.ZERO, XRPose.XR_TRACKING_CONFIDENCE_HIGH)
 				XRServer.add_tracker(left_tracker)
 			elif child.tracker == "right_hand" and not child.get_is_active():
 				right_controller = child
-				right_tracker.set_pose("default", child.transform, Vector3.ZERO, Vector3.ZERO, XRPose.XR_TRACKING_CONFIDENCE_HIGH)
+				right_tracker.set_pose(pose, child.transform, Vector3.ZERO, Vector3.ZERO, XRPose.XR_TRACKING_CONFIDENCE_HIGH)
 				XRServer.add_tracker(right_tracker)
 	
 
