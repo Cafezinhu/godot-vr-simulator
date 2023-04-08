@@ -70,6 +70,8 @@ func _input(event):
 		return
 	if Input.is_key_pressed(KEY_ESCAPE):
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	elif Input.is_key_pressed(KEY_F11):
+		get_viewport().use_xr = !get_viewport().use_xr
 	elif Input.mouse_mode != Input.MOUSE_MODE_CAPTURED and event is InputEventMouseButton:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED	
 	
