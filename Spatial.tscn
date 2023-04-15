@@ -117,6 +117,7 @@ transform = Transform3D(0.402254, -0.874811, 0.269994, -0.530985, 0.0173175, 0.8
 shadow_enabled = true
 
 [node name="XRSimulator" parent="." instance=ExtResource("7_yovyb")]
+is_camera_y_limited = false
 xr_origin = NodePath("../XROrigin3D")
 
 [node name="StartXR" parent="." instance=ExtResource("8_qoqsw")]

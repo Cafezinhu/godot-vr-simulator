@@ -4,6 +4,9 @@ extends Node
 @export var device_x_sensitivity: float = 1
 @export var device_y_sensitivity: float = 1
 @export var scroll_sensitivity: float = 1
+@export var is_camera_height_limited: bool = true
+@export var min_camera_height: float = 0.5
+@export var max_camera_height: float = 2.0
 @export var xr_origin: NodePath
 
 var origin: XROrigin3D
@@ -122,7 +125,10 @@ func camera_height(event: InputEventMouseButton):
 		return
 	
 	var pos = camera.transform.origin
-	camera.transform.origin = Vector3(pos.x, pos.y + (scroll_sensitivity * direction)/20 , pos.z)
+	var camera_y = pos.y + (scroll_sensitivity * direction)/20
+	if (camera_y >= max_camera_height or camera_y <= min_camera_height) and is_camera_height_limited:
+		camera_y = pos.y
+	camera.transform.origin = Vector3(pos.x, camera_y , pos.z)
 
 func simulate_joysticks():
 	var vec_left = vector_key_mapping(KEY_D, KEY_A, KEY_W, KEY_S)
