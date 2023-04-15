@@ -51,3 +51,6 @@ Pressing 1 to 8 (on the alphanumeric keyboard), ``-``, ``=`` and ``Enter`` will 
 - ``Enter`` presses menu_button
 
 As stated before, pressing ``Left Click`` presses trigger_click, and ``Right Click`` presses grip_click.
+
+## Other controls
+If you get a black screen, press F11 to disable ``use_xr`` on the viewport.
