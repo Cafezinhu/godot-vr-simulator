@@ -1,7 +1,10 @@
 extends Node
 
+enum ControllerSelectionMode {Hold, Toggle}
+
 @export var enabled: bool
 @export var disable_xr_in_editor: bool = true
+@export var controller_selection_mode: ControllerSelectionMode = ControllerSelectionMode.Hold
 @export var device_x_sensitivity: float = 1
 @export var device_y_sensitivity: float = 1
 @export var scroll_sensitivity: float = 1
@@ -16,6 +19,10 @@ var left_controller: XRController3D
 var right_controller: XRController3D
 var left_tracker: XRPositionalTracker
 var right_tracker: XRPositionalTracker
+
+var toggle_left_controller = false
+var toggle_right_controller = false
+var toggle_shift = false
 
 var key_map = {
 	KEY_1: "by_button",
@@ -87,37 +94,47 @@ func _input(event):
 		return
 	
 	simulate_joysticks()
-	
+	var is_any_controller_selected = false
 	if event is InputEventMouseMotion:
-		if Input.is_physical_key_pressed(KEY_Q):
+		if Input.is_physical_key_pressed(KEY_Q) or toggle_left_controller:
+			is_any_controller_selected = true
 			if Input.is_key_pressed(KEY_SHIFT):
 				rotate_device(event, left_controller)
 			else:
 				move_controller(event, left_controller)
-		elif Input.is_physical_key_pressed(KEY_E):
+		if Input.is_physical_key_pressed(KEY_E) or toggle_right_controller:
+			is_any_controller_selected = true
 			if Input.is_key_pressed(KEY_SHIFT):
 				rotate_device(event, right_controller)
 			else:
 				move_controller(event, right_controller)
-		else:
+		if not is_any_controller_selected:
 			rotate_device(event, camera)
 	elif event is InputEventMouseButton:
-		if Input.is_physical_key_pressed(KEY_Q):
+		if Input.is_physical_key_pressed(KEY_Q) or toggle_left_controller:
+			is_any_controller_selected = true
 			attract_controller(event, left_controller)
 			simulate_trigger(event, left_controller)
 			simulate_grip(event, left_controller)
-		elif Input.is_physical_key_pressed(KEY_E):
+		if Input.is_physical_key_pressed(KEY_E) or toggle_right_controller:
+			is_any_controller_selected = true
 			attract_controller(event, right_controller)
 			simulate_trigger(event, right_controller)
 			simulate_grip(event, right_controller)
-		else:
+		if not is_any_controller_selected:
 			camera_height(event)
 	elif event is InputEventKey:
-		if Input.is_physical_key_pressed(KEY_Q):
+		if controller_selection_mode == ControllerSelectionMode.Toggle and event.pressed:
+			if event.keycode == KEY_Q:
+				toggle_left_controller = !toggle_left_controller
+			elif event.keycode == KEY_E:
+				toggle_right_controller = !toggle_right_controller
+			
+		if Input.is_physical_key_pressed(KEY_Q) or toggle_left_controller:
 			simulate_buttons(event, left_controller)
-		elif Input.is_physical_key_pressed(KEY_E):
+		if Input.is_physical_key_pressed(KEY_E) or toggle_right_controller:
 			simulate_buttons(event, right_controller)
-
+			
 func camera_height(event: InputEventMouseButton):
 	var direction = -1
 	
