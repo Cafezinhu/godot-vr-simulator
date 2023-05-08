@@ -1,6 +1,7 @@
 extends Node
 
 @export var enabled: bool
+@export var disable_xr_in_editor: bool = true
 @export var device_x_sensitivity: float = 1
 @export var device_y_sensitivity: float = 1
 @export var scroll_sensitivity: float = 1
@@ -32,6 +33,8 @@ var key_map = {
 	KEY_BACKSPACE: "",
 	KEY_ENTER: "menu_button"
 }
+
+@onready var viewport: Viewport = get_viewport()
 
 func _ready():
 	if not enabled or \
@@ -68,13 +71,15 @@ func _ready():
 				XRServer.add_tracker(right_tracker)
 	
 
+func _process(_delta):
+	if enabled and disable_xr_in_editor and OS.has_feature("editor") and viewport.use_xr:
+		viewport.use_xr = false
+
 func _input(event):
 	if not enabled:
 		return
 	if Input.is_key_pressed(KEY_ESCAPE):
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	elif Input.is_key_pressed(KEY_F11):
-		get_viewport().use_xr = !get_viewport().use_xr
 	elif Input.mouse_mode != Input.MOUSE_MODE_CAPTURED and event is InputEventMouseButton:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED	
 	
