@@ -44,7 +44,8 @@ var key_map = {
 @onready var viewport: Viewport = get_viewport()
 
 func _ready():
-	if not enabled:
+	if not enabled or not OS.has_feature("editor"):
+		enabled = false
 		return
 		
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -89,7 +90,7 @@ func _process(_delta):
 		viewport.use_xr = false
 
 func _input(event):
-	if not enabled or not origin.current:
+	if not enabled or not origin.current or not OS.has_feature("editor"):
 		return
 	if Input.is_key_pressed(KEY_ESCAPE):
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
