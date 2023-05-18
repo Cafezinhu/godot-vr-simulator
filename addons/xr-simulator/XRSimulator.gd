@@ -44,9 +44,7 @@ var key_map = {
 @onready var viewport: Viewport = get_viewport()
 
 func _ready():
-	if not enabled or \
-	XRServer.get_tracker("left_hand") or \
-	XRServer.get_tracker("right_hand"):
+	if not enabled:
 		return
 		
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -55,24 +53,32 @@ func _ready():
 
 	camera = origin.get_node("XRCamera3D")
 	
-	left_tracker = XRPositionalTracker.new()
-	left_tracker.type = XRServer.TRACKER_CONTROLLER
-	left_tracker.hand = XRPositionalTracker.TRACKER_HAND_LEFT
-	left_tracker.name = "left_hand"
+	var left_hand = XRServer.get_tracker("left_hand")
+	if left_hand == null:
+		left_tracker = XRPositionalTracker.new()
+		left_tracker.type = XRServer.TRACKER_CONTROLLER
+		left_tracker.hand = XRPositionalTracker.TRACKER_HAND_LEFT
+		left_tracker.name = "left_hand"
+	else:
+		left_tracker = left_hand
 	
-	right_tracker = XRPositionalTracker.new()
-	right_tracker.type = XRServer.TRACKER_CONTROLLER
-	right_tracker.hand = XRPositionalTracker.TRACKER_HAND_RIGHT
-	right_tracker.name = "right_hand"
+	var right_hand = XRServer.get_tracker("right_hand")
+	if right_hand == null:
+		right_tracker = XRPositionalTracker.new()
+		right_tracker.type = XRServer.TRACKER_CONTROLLER
+		right_tracker.hand = XRPositionalTracker.TRACKER_HAND_RIGHT
+		right_tracker.name = "right_hand"
+	else:
+		right_tracker = right_hand
 	
 	for child in origin.get_children():
 		if child.get("tracker"):
 			var pose = child.pose
-			if child.tracker == "left_hand" and not child.get_is_active():
+			if child.tracker == "left_hand":
 				left_controller = child
 				left_tracker.set_pose(pose, child.transform, Vector3.ZERO, Vector3.ZERO, XRPose.XR_TRACKING_CONFIDENCE_HIGH)
 				XRServer.add_tracker(left_tracker)
-			elif child.tracker == "right_hand" and not child.get_is_active():
+			elif child.tracker == "right_hand":
 				right_controller = child
 				right_tracker.set_pose(pose, child.transform, Vector3.ZERO, Vector3.ZERO, XRPose.XR_TRACKING_CONFIDENCE_HIGH)
 				XRServer.add_tracker(right_tracker)
@@ -83,7 +89,7 @@ func _process(_delta):
 		viewport.use_xr = false
 
 func _input(event):
-	if not enabled:
+	if not enabled or not origin.current:
 		return
 	if Input.is_key_pressed(KEY_ESCAPE):
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -154,7 +160,6 @@ func camera_height(event: InputEventMouseButton):
 
 func simulate_joysticks():
 	var vec_left = vector_key_mapping(KEY_D, KEY_A, KEY_W, KEY_S)
-	
 	left_tracker.set_input("primary", vec_left)
 	
 	var vec_right = vector_key_mapping(KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN)
