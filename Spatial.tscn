@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://o224y2d50yl1"]
+[gd_scene load_steps=19 format=3 uid="uid://o224y2d50yl1"]
 
 [ext_resource type="PackedScene" uid="uid://bl2nuu3qhlb5k" path="res://addons/godot-xr-tools/functions/movement_direct.tscn" id="1_ywmh7"]
 [ext_resource type="PackedScene" uid="uid://b4ysuy43poobf" path="res://addons/godot-xr-tools/functions/function_pickup.tscn" id="2_nloek"]
@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://fiul51tsyoop" path="res://addons/godot-xr-tools/functions/function_teleport.tscn" id="3_isyx6"]
 [ext_resource type="PackedScene" uid="uid://diyu06cw06syv" path="res://addons/godot-xr-tools/player/player_body.tscn" id="3_m4pts"]
 [ext_resource type="PackedScene" uid="uid://c8l60rnugru40" path="res://addons/godot-xr-tools/objects/pickable.tscn" id="5_r3xxt"]
-[ext_resource type="PackedScene" uid="uid://ctltchlf2j2r4" path="res://addons/xr-simulator/XRSimulator.tscn" id="7_yovyb"]
 [ext_resource type="PackedScene" uid="uid://clc5dre31iskm" path="res://addons/godot-xr-tools/xr/start_xr.tscn" id="8_qoqsw"]
 
 [sub_resource type="BoxShape3D" id="1"]
@@ -116,10 +115,6 @@ environment = SubResource("Environment_71xw7")
 transform = Transform3D(0.402254, -0.874811, 0.269994, -0.530985, 0.0173175, 0.847205, -0.74582, -0.484154, -0.457545, 0, -0.516751, 0.31203)
 shadow_enabled = true
 
-[node name="XRSimulator" parent="." instance=ExtResource("7_yovyb")]
-xr_origin = NodePath("../XROrigin3D")
-
 [node name="StartXR" parent="." instance=ExtResource("8_qoqsw")]
-physics_rate_multiplier = 1
 
 [editable path="PickableObject"]

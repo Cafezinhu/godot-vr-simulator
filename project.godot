@@ -12,12 +12,13 @@ config_version=5
 
 config/name="vremulator"
 run/main_scene="res://Spatial.tscn"
-config/features=PackedStringArray("4.0")
+config/features=PackedStringArray("4.2")
 config/icon="res://icon.png"
 
 [autoload]
 
 XRToolsUserSettings="*res://addons/godot-xr-tools/user_settings/user_settings.gd"
+XrSimulator="*res://addons/xr-simulator/XRSimulator.tscn"
 
 [editor_plugins]
 

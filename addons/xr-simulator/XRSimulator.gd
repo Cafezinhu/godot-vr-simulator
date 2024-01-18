@@ -11,9 +11,7 @@ enum ControllerSelectionMode {Hold, Toggle}
 @export var is_camera_height_limited: bool = true
 @export var min_camera_height: float = 0.5
 @export var max_camera_height: float = 2.0
-@export var xr_origin: NodePath
 
-var origin: XROrigin3D
 var camera: XRCamera3D
 var left_controller: XRController3D
 var right_controller: XRController3D
@@ -43,16 +41,30 @@ var key_map = {
 
 @onready var viewport: Viewport = get_viewport()
 
+func _on_node_added(node: Node):
+	print("node added:", node.name)
+	if node is XRCamera3D:
+		camera = node
+	elif node is XRController3D:
+		var pose = node.pose
+		if node.tracker == "left_hand":
+			left_controller = node
+			left_tracker.set_pose(pose, node.transform, Vector3.ZERO, Vector3.ZERO, XRPose.XR_TRACKING_CONFIDENCE_HIGH)
+			XRServer.add_tracker(left_tracker)
+		elif node.tracker == "right_hand":
+			right_controller = node
+			right_tracker.set_pose(pose, node.transform, Vector3.ZERO, Vector3.ZERO, XRPose.XR_TRACKING_CONFIDENCE_HIGH)
+			XRServer.add_tracker(right_tracker)
+
+func _search_first_xr_nodes(node: Node):
+	for child in node.get_children():
+		_search_first_xr_nodes(child)
+		_on_node_added(child)
+
 func _ready():
 	if not enabled or not OS.has_feature("editor"):
 		enabled = false
 		return
-		
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	
-	origin = get_node(xr_origin)
-
-	camera = origin.get_node("XRCamera3D")
 	
 	var left_hand = XRServer.get_tracker("left_hand")
 	if left_hand == null:
@@ -72,25 +84,18 @@ func _ready():
 	else:
 		right_tracker = right_hand
 	
-	for child in origin.get_children():
-		if child.get("tracker"):
-			var pose = child.pose
-			if child.tracker == "left_hand":
-				left_controller = child
-				left_tracker.set_pose(pose, child.transform, Vector3.ZERO, Vector3.ZERO, XRPose.XR_TRACKING_CONFIDENCE_HIGH)
-				XRServer.add_tracker(left_tracker)
-			elif child.tracker == "right_hand":
-				right_controller = child
-				right_tracker.set_pose(pose, child.transform, Vector3.ZERO, Vector3.ZERO, XRPose.XR_TRACKING_CONFIDENCE_HIGH)
-				XRServer.add_tracker(right_tracker)
-	
+	get_tree().node_added.connect(_on_node_added)
+	_search_first_xr_nodes(get_tree().root)
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _process(_delta):
 	if enabled and disable_xr_in_editor and OS.has_feature("editor") and viewport.use_xr:
 		viewport.use_xr = false
 
 func _input(event):
-	if not enabled or not origin.current or not OS.has_feature("editor"):
+	if not enabled or not OS.has_feature("editor"):
+		return
+	if not left_tracker or not right_tracker or not camera:
 		return
 	if Input.is_key_pressed(KEY_ESCAPE):
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -162,7 +167,7 @@ func camera_height(event: InputEventMouseButton):
 func simulate_joysticks():
 	var vec_left = vector_key_mapping(KEY_D, KEY_A, KEY_W, KEY_S)
 	left_tracker.set_input("primary", vec_left)
-	
+
 	var vec_right = vector_key_mapping(KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN)
 	
 	right_tracker.set_input("primary", vec_right)
@@ -194,12 +199,16 @@ func simulate_buttons(event: InputEventKey, controller: XRController3D):
 			right_tracker.set_input(button, event.pressed)
 
 func move_controller(event: InputEventMouseMotion, controller: XRController3D):
+	if not camera:
+		return
 	var movement = Vector3()
 	movement += camera.global_transform.basis.x * event.relative.x * device_x_sensitivity/1000
 	movement += camera.global_transform.basis.y * event.relative.y * -device_y_sensitivity/1000
 	controller.global_translate(movement)
 	
 func attract_controller(event: InputEventMouseButton, controller: XRController3D):
+	if not camera:
+		return
 	var direction = -1
 	
 	if not event.pressed:
