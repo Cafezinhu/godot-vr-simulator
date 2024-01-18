@@ -42,7 +42,6 @@ var key_map = {
 @onready var viewport: Viewport = get_viewport()
 
 func _on_node_added(node: Node):
-	print("node added:", node.name)
 	if node is XRCamera3D:
 		camera = node
 	elif node is XRController3D:
