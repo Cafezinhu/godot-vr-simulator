@@ -3,7 +3,7 @@ extends Node
 enum ControllerSelectionMode {Hold, Toggle}
 
 @export var enabled: bool
-@export var disable_xr_in_editor: bool = true
+@export var disable_xr_in_editor: bool = false
 @export var controller_selection_mode: ControllerSelectionMode = ControllerSelectionMode.Hold
 @export var device_x_sensitivity: float = 1
 @export var device_y_sensitivity: float = 1
