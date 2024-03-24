@@ -5,7 +5,7 @@ Simulate XRController3D and XRCamera Input
 - Setup your scene for VR. You can start by following Bastiaan Olij's tutorials
 https://www.youtube.com/watch?v=wDXnsy2IH1A
 
-- Insert ``XRSimulator.tscn`` into your scene, and then assign your ``XROrigin`` into the ``XR Origin`` parameter.
+- Insert ``XRSimulator.tscn`` into Autoload.
 
 ![How to setup a VR Simulator](https://github.com/Cafezinhu/godot-vr-simulator/blob/main/github-assets/assigngif.gif?raw=true)
 
