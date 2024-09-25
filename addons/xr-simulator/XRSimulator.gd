@@ -44,13 +44,16 @@ var key_map = {
 func _on_node_added(node: Node):
 	if node is XRCamera3D:
 		camera = node
+		camera.rotate_y(deg_to_rad(1.0))
 	elif node is XRController3D:
 		var pose = node.pose
 		if node.tracker == "left_hand":
+			node.position.x += -0.1
 			left_controller = node
 			left_tracker.set_pose(pose, node.transform, Vector3.ZERO, Vector3.ZERO, XRPose.XR_TRACKING_CONFIDENCE_HIGH)
 			XRServer.add_tracker(left_tracker)
 		elif node.tracker == "right_hand":
+			node.position.x += 0.1
 			right_controller = node
 			right_tracker.set_pose(pose, node.transform, Vector3.ZERO, Vector3.ZERO, XRPose.XR_TRACKING_CONFIDENCE_HIGH)
 			XRServer.add_tracker(right_tracker)
