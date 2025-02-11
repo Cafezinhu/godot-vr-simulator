@@ -3,7 +3,6 @@ extends Node
 enum ControllerSelectionMode {Hold, Toggle}
 
 @export var enabled: bool
-@export var disable_xr_in_editor: bool = false
 @export var controller_selection_mode: ControllerSelectionMode = ControllerSelectionMode.Hold
 @export var device_x_sensitivity: float = 1
 @export var device_y_sensitivity: float = 1
@@ -89,10 +88,6 @@ func _ready():
 	get_tree().node_added.connect(_on_node_added)
 	_search_first_xr_nodes(get_tree().root)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-
-func _process(_delta):
-	if enabled and disable_xr_in_editor and OS.has_feature("editor") and viewport.use_xr:
-		viewport.use_xr = false
 
 func _input(event):
 	if not enabled or not OS.has_feature("editor"):
