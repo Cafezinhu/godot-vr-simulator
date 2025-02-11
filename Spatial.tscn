@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://o224y2d50yl1"]
+[gd_scene load_steps=20 format=3 uid="uid://o224y2d50yl1"]
 
 [ext_resource type="PackedScene" uid="uid://bl2nuu3qhlb5k" path="res://addons/godot-xr-tools/functions/movement_direct.tscn" id="1_ywmh7"]
 [ext_resource type="PackedScene" uid="uid://b4ysuy43poobf" path="res://addons/godot-xr-tools/functions/function_pickup.tscn" id="2_nloek"]
@@ -22,9 +22,11 @@ size = Vector2(50, 50)
 
 [sub_resource type="BoxShape3D" id="6"]
 
-[sub_resource type="SphereMesh" id="SphereMesh_ms63b"]
-radius = 0.05
-height = 0.1
+[sub_resource type="PrismMesh" id="PrismMesh_gm1cf"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_7bdrn"]
+size = Vector3(0.1, 0.1, 0.1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qgrop"]
 size = Vector3(0.1, 0.1, 0.1)
@@ -76,7 +78,7 @@ tracker = &"left_hand"
 [node name="FunctionPickup" parent="XROrigin3D/LeftController" instance=ExtResource("2_nloek")]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="XROrigin3D/LeftController"]
-mesh = SubResource("SphereMesh_ms63b")
+mesh = SubResource("PrismMesh_gm1cf")
 
 [node name="MovementDirect" parent="XROrigin3D/LeftController" instance=ExtResource("1_ywmh7")]
 strafe = true
@@ -91,7 +93,7 @@ tracker = &"right_hand"
 [node name="FunctionPickup" parent="XROrigin3D/RightController" instance=ExtResource("2_nloek")]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="XROrigin3D/RightController"]
-mesh = SubResource("SphereMesh_ms63b")
+mesh = SubResource("PrismMesh_7bdrn")
 
 [node name="MovementTurn" parent="XROrigin3D/RightController" instance=ExtResource("3_7xdfk")]
 

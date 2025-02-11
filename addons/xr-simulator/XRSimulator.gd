@@ -122,12 +122,18 @@ func _input(event):
 	elif event is InputEventMouseButton:
 		if Input.is_physical_key_pressed(KEY_Q) or toggle_left_controller:
 			is_any_controller_selected = true
-			attract_controller(event, left_controller)
+			if not Input.is_key_pressed(KEY_SHIFT):
+				attract_controller(event, left_controller)
+			else:
+				rotate_z_axis(event, left_controller)
 			simulate_trigger(event, left_controller)
 			simulate_grip(event, left_controller)
 		if Input.is_physical_key_pressed(KEY_E) or toggle_right_controller:
 			is_any_controller_selected = true
-			attract_controller(event, right_controller)
+			if not Input.is_key_pressed(KEY_SHIFT):
+				attract_controller(event, right_controller)
+			else:
+				rotate_z_axis(event, right_controller)
 			simulate_trigger(event, right_controller)
 			simulate_grip(event, right_controller)
 		if not is_any_controller_selected:
@@ -221,6 +227,18 @@ func attract_controller(event: InputEventMouseButton, controller: XRController3D
 	var movement = distance_vector + forward * (scroll_sensitivity/20)
 	if distance_vector.length() > 0.1 and movement.length() > 0.1:
 		controller.global_translate(forward * (scroll_sensitivity/20))
+
+func rotate_z_axis(event: InputEventMouseButton, controller: XRController3D):
+	var direction = -1
+	
+	if not event.pressed:
+		return
+	
+	if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+		direction = 1
+	elif event.button_index != MOUSE_BUTTON_WHEEL_DOWN:
+		return
+	controller.rotate_z(scroll_sensitivity * direction/20.0)
 
 func rotate_device(event: InputEventMouseMotion, device: Node3D):
 	var motion = event.relative
